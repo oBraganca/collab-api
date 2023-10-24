@@ -112,7 +112,7 @@ public class User extends BaseModel implements UserDetails{
         return first_name;
     }
     
-    public void getFirstName(String first_name) {
+    public void setFirstName(String first_name) {
         this.first_name = first_name;
     }
     
