@@ -1,4 +1,4 @@
-package com.application.collab;
+package com.application.collabApi;
 
 import com.application.controller.AuthController;
 import com.application.dto.UserDto;

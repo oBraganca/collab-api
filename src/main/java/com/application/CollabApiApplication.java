@@ -12,10 +12,10 @@ import org.springframework.http.ResponseEntity;
 
 @SpringBootApplication
 @RestController
-public class CollabApplication {
+public class CollabApiApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(CollabApplication.class, args);
+		SpringApplication.run(CollabApiApplication.class, args);
 	}
 	
     @GetMapping("api/version")
