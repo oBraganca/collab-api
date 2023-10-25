@@ -30,10 +30,10 @@ public class User extends BaseModel implements UserDetails{
 	@GeneratedValue(strategy=GenerationType.AUTO)
     private UUID id;
 
-    @Column(nullable = false, unique = true, name = "first_name")
+    @Column(nullable = false, unique = false, name = "first_name")
     private String first_name;
 
-    @Column(nullable = false, unique = true, name = "last_name")
+    @Column(nullable = false, unique = false, name = "last_name")
     private String last_name;
     
     @Column(nullable = false, unique = true, name = "username")
@@ -48,7 +48,7 @@ public class User extends BaseModel implements UserDetails{
     @Column(nullable = true, name = "picture")
     private String picture;
 
-    @Column(nullable = false, name = "theme")
+    @Column(nullable = true, name = "theme")
     private Boolean theme;
 
     @Column(nullable = false, name = "location")

@@ -91,7 +91,9 @@ public class AuthController {
     
         // creating user object
         User user = new User();
-        user.setName(userDto.getName());
+        System.out.println(userDto.toString());
+        user.setFirstName(userDto.getFirstName());
+        user.setLastName(userDto.getLastName());
         user.setUsername(userDto.getUsername());
         user.setEmail(userDto.getEmail());
         user.setPassword(passwordEncoder.encode(userDto.getPassword()));

@@ -56,7 +56,7 @@ public class UserController {
             }
 
             // Update user details based on userDto
-            existingUser.setName(userDto.getName());
+            existingUser.setFirstName(userDto.getFirstName());
             existingUser.setEmail(userDto.getEmail());
 
             // Save the updated user
