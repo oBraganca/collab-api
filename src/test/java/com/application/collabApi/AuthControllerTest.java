@@ -57,7 +57,7 @@ public class AuthControllerTest {
 
         // Prepare test data
         UserDto userDto = new UserDto();
-        userDto.setName("Test User");
+        userDto.setFirstName("Test User");
         userDto.setUsername("newuser");
         userDto.setEmail("newuser@example.com");
         userDto.setPassword("password123");
@@ -80,7 +80,7 @@ public class AuthControllerTest {
     public void testRegisterUser_DuplicateUsernameAndEmail() throws Exception {
         // Prepare test data
         UserDto userDto = new UserDto();
-        userDto.setName("Test User");
+        userDto.setFirstName("Test User");
         userDto.setUsername("newuser");
         userDto.setEmail("newuser@example.com");
         userDto.setPassword("password123");

@@ -11,7 +11,7 @@ import com.application.repository.UserRepository;
 import com.application.security.SecurityConfig;
 import com.application.service.TokenService;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.jayway.jsonpath.internal.filter.ValueNodes.JsonNode;
+import com.fasterxml.jackson.databind.JsonNode;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -74,36 +74,45 @@ public class UserControllerTest {
     // Método para obter o token
     private String obtainAuthToken() {
         try {
+            // Create a user DTO for login
             UserDto userDto = new UserDto();
             userDto.setUsername("newuser");
             userDto.setPassword("password123");
     
+            // Create a mock user
             User mockUser = new User();
             mockUser.setUsername("newuser");
             mockUser.setEmail("test@example.com");
     
+            // Mock the authentication process
+            Authentication authentication = new UsernamePasswordAuthenticationToken(mockUser, null, Collections.emptyList());
             when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
-                .thenReturn(new UsernamePasswordAuthenticationToken(mockUser, null, Collections.emptyList()));
-            when(tokenService.tokenGenerate(any(User.class))).thenReturn("mockToken");
-            when(userRepository.existsByUsername("testuser")).thenReturn(true);
+                .thenReturn(authentication);
     
-            // Perform the POST request and expect a successful status code (200)
+            // Mock the token generation
+            when(tokenService.tokenGenerate(any(User.class))).thenReturn("mockToken");
+    
+            // Mock the existence check for the username
+            when(userRepository.existsByUsername("newuser")).thenReturn(true);
+    
+            System.out.println(asJsonString(userDto));
+            // Perform the POST request for login
             MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/api/login")
-                    .content(asJsonString(userDto))
-                    .contentType(MediaType.APPLICATION_JSON))
-                    .andExpect(MockMvcResultMatchers.status().isOk())
-                    .andReturn();
-            
-            // Extrair o token do resultado
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(userDto)))
+                .andReturn();
+    
+            // Extract the token from the response
             String responseBody = result.getResponse().getContentAsString();
-            com.fasterxml.jackson.databind.JsonNode jsonNode = new ObjectMapper().readTree(responseBody);
+            JsonNode jsonNode = new ObjectMapper().readTree(responseBody);
             return "Bearer " + jsonNode.get("token").asText();
         } catch (Exception e) {
             e.printStackTrace();
-            fail("Erro ao obter o token de autenticação");
+            fail("Error obtaining the authentication token");
             return null;
         }
     }
+    
 
     @Test
     @DisplayName("Update a user successfully")
@@ -114,7 +123,7 @@ public class UserControllerTest {
         if(user != null){
             // Prepare test data
             UserDto userDto = new UserDto();
-            userDto.setName("Test User Updated");
+            userDto.setFirstName("Test User Updated");
             userDto.setEmail("newuser@example.com");
     
             Role mockRole = new Role();
