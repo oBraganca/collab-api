@@ -6,16 +6,25 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.application.dto.UserDto;
+import com.application.model.Role;
 import com.application.model.User;
+import com.application.repository.RoleRepository;
 import com.application.repository.UserRepository;
+import com.application.service.TokenService;
 
 
 @RestController
@@ -24,7 +33,7 @@ public class UserController {
 
     @Autowired
     private UserRepository userRepository;
-	
+ 
 	@DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable UUID id) {
         try {
@@ -56,7 +65,7 @@ public class UserController {
             }
 
             // Update user details based on userDto
-            existingUser.setFirstName(userDto.getFirstName());
+            existingUser.setFirstName(userDto.getFirst_name());
             existingUser.setEmail(userDto.getEmail());
 
             // Save the updated user

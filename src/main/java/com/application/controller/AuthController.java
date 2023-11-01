@@ -3,6 +3,7 @@ package com.application.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -25,7 +26,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/auth")
 public class AuthController {
 
     @Autowired
@@ -42,11 +43,11 @@ public class AuthController {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
-    @PostMapping("/login")
+    @PostMapping("/signin")
     public ResponseEntity<?> login(@RequestBody UserDto userDto){
         try {
             UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
-                new UsernamePasswordAuthenticationToken(userDto.getUsername(), userDto.getPassword());
+                new UsernamePasswordAuthenticationToken(userDto.getEmail(), userDto.getPassword());
 
             Authentication authenticate = authenticationManager.authenticate(usernamePasswordAuthenticationToken);
 
@@ -57,8 +58,6 @@ public class AuthController {
 
                 Map<String, Object> response = new HashMap<>();
                 response.put("token", token);
-                response.put("username", user.getUsername());
-                response.put("email", user.getEmail());
 
                 return ResponseEntity.ok(response);
             } else {
@@ -73,15 +72,9 @@ public class AuthController {
         }
     }
     
-    @PostMapping("/register")
+    @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@RequestBody UserDto userDto) {
         Map<String, String> response = new HashMap<>();
-    
-        // checking for username exists in a database
-        if (userRepository.existsByUsername(userDto.getUsername())) {
-            response.put("message", "Username is already exist!");
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
-        }
     
         // checking for email exists in a database
         if (userRepository.existsByEmail(userDto.getEmail())) {
@@ -91,15 +84,13 @@ public class AuthController {
     
         // creating user object
         User user = new User();
-        System.out.println(userDto.toString());
-        user.setFirstName(userDto.getFirstName());
-        user.setLastName(userDto.getLastName());
-        user.setUsername(userDto.getUsername());
+        user.setFirstName(userDto.getFirst_name());
+        user.setLastName(userDto.getLast_name());
         user.setEmail(userDto.getEmail());
         user.setPassword(passwordEncoder.encode(userDto.getPassword()));
     
         Role role = roleRepository.findByName("ROLE_ADMIN");
-        user.setRoles(Collections.singleton(role));
+        user.setRoles(role);
     
         userRepository.save(user);
     

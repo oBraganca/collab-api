@@ -14,7 +14,7 @@ public class TokenService {
     public String tokenGenerate(User user){
         return JWT.create()
                 .withIssuer("auth")
-                .withSubject(user.getUsername())
+                .withSubject(user.getEmail())
                 .withClaim("id", true)
                 .withExpiresAt(LocalDateTime.now()
                                 .plusMinutes(120)

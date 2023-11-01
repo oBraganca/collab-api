@@ -7,6 +7,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Column;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 import java.util.UUID;
@@ -35,9 +36,6 @@ public class User extends BaseModel implements UserDetails{
 
     @Column(nullable = false, unique = false, name = "last_name")
     private String last_name;
-    
-    @Column(nullable = false, unique = true, name = "username")
-    private String username;
 
     @Column(nullable = false, unique = true, name = "email")
     private String email;
@@ -45,56 +43,14 @@ public class User extends BaseModel implements UserDetails{
     @Column(nullable = false, name = "password")
     private String password;
 
-    @Column(nullable = true, name = "picture")
-    private String picture;
+    @OneToOne
+    private Role role;
 
-    @Column(nullable = true, name = "theme")
-    private Boolean theme;
-
-    @Column(nullable = false, name = "location")
-    private String location;
-
-    @Column(nullable = false, name = "language")
-    private String language;
-
-    
-    @ManyToMany
-    private Set<Role> roles;
+    @OneToOne
+    private UserCustomizations userCustomizations;
 
     public UUID getId() {
         return id;
-    }
-    
-    public String getPicture() {
-        return picture;
-    }
-    
-    public void setPicture(String picture) {
-        this.picture = picture;
-    }
-    
-    public Boolean getTheme() {
-        return theme;
-    }
-    
-    public void setTheme(Boolean theme) {
-        this.theme = theme;
-    }
-    
-    public String getLocation() {
-        return location;
-    }
-    
-    public void setLocation(String location) {
-        this.location = location;
-    }
-    
-    public String getLanguage() {
-        return language;
-    }
-    
-    public void setLanguage(String language) {
-        this.language = language;
     }
     public void setId(UUID id) {
         this.id = id;
@@ -132,13 +88,27 @@ public class User extends BaseModel implements UserDetails{
         this.password = password;
     }
     
-    public Set<Role> getRoles() {
-        return roles;
+    public Role getRoles() {
+        return role;
     }
     
-    public void setRoles(Set<Role> roles) {
-        this.roles = roles;
+    public void setRoles(Role role) {
+        this.role = role;
     }
+
+    @Override
+    public String getUsername() {
+        return email;
+    }
+
+    public UserCustomizations getUserCustomizations() {
+        return userCustomizations;
+    }
+    
+    public void setUserCustomizations(UserCustomizations userCustomizations) {
+        this.userCustomizations = userCustomizations;
+    }
+
     public User orElseThrow(Object object) {
         return null;
     }
@@ -147,14 +117,7 @@ public class User extends BaseModel implements UserDetails{
         return List.of(new SimpleGrantedAuthority("ROLE_USER"));
         
     }
-    @Override
-    public String getUsername() {
-        return this.username;
-    }
     
-    public void setUsername(String username) {
-        this.username = username;
-    }
     @Override
     public boolean isAccountNonExpired() {
         return true;

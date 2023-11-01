@@ -12,14 +12,12 @@ import java.util.UUID;
 @RepositoryRestResource(collectionResourceRel = "users", path = "users")
 public interface UserRepository extends JpaRepository<User, UUID> {
 
-    User findByUsernameOrEmail(String username, String email);
-    User findByUsername(String username);
+    User findByEmail(String email);
     User getById(UUID id);
     
     @Transactional
     void deleteById(UUID id);
     
-    boolean existsByUsername(String username);
     boolean existsByEmail(String email);
     boolean existsById(UUID id);
 }

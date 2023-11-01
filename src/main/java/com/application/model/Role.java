@@ -15,7 +15,7 @@ import com.application.listener.ModelListerner;
 
 @Entity
 @EntityListeners(ModelListerner.class)
-@Table(name="roles")
+@Table(name="role")
 public class Role extends BaseModel{
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

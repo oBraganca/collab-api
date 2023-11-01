@@ -6,6 +6,8 @@ import jakarta.persistence.MappedSuperclass;
 
 import java.time.LocalDateTime;
 
+import org.hibernate.annotations.DynamicInsert;
+
 import com.application.listener.ModelListerner;
 
 @MappedSuperclass

@@ -15,7 +15,7 @@ import jakarta.persistence.Table;
 
 @Entity
 @EntityListeners(ModelListerner.class)
-@Table(name="posts")
+@Table(name="post")
 public class Post extends BaseModel{
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
