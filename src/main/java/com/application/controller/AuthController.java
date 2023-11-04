@@ -2,7 +2,10 @@ package com.application.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -14,10 +17,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.application.dto.Response;
 import com.application.dto.UserDto;
 import com.application.model.Role;
 import com.application.model.User;
+import com.application.model.UserCustomizations;
 import com.application.repository.RoleRepository;
+import com.application.repository.UserCustomizationsRepositoy;
 import com.application.repository.UserRepository;
 import com.application.service.TokenService;
 
@@ -39,6 +45,9 @@ public class AuthController {
     private RoleRepository roleRepository;
 
     @Autowired
+    private UserCustomizationsRepositoy userCustomizationsRepositoy;
+    
+    @Autowired
     private TokenService tokenService;
 
     @Autowired
@@ -56,19 +65,44 @@ public class AuthController {
 
                 String token = tokenService.tokenGenerate(user);
 
-                Map<String, Object> response = new HashMap<>();
-                response.put("token", token);
+                Map<String, Object> dataResponse = new HashMap<>();
+                
+                dataResponse.put("first_name", user.getFirstName());
+                dataResponse.put("last_name", user.getLastName());
+                dataResponse.put("email", user.getEmail());
+                
+                Role role = user.getRole();
+                dataResponse.put("role", role.getName());
+                
+                UserCustomizations userCustomizations = user.getUserCustomizations();
+                dataResponse.put("picture",userCustomizations.getPicture());
+                dataResponse.put("theme", userCustomizations.getTheme());
 
-                return ResponseEntity.ok(response);
+                dataResponse.put("token", token);
+
+                Response response = new Response();
+                response.setData(dataResponse);
+                response.setMessage("User logged in successfully");
+                response.setStatus(200);
+                response.setSucess(true);
+                return ResponseEntity.status(HttpStatus.OK).body(response);
             } else {
-                Map<String, String> errorResponse = new HashMap<>();
-                errorResponse.put("error", "Authentication failed");
+                Map<String, Object> errorResponse = new HashMap<>();
+                Map<String, Object> dataResponse = new HashMap<>();
+                errorResponse.put("data", dataResponse);
+                errorResponse.put("status", 200);
+                errorResponse.put("sucess", false);
+                errorResponse.put("message", "Invalid email or password");
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
             }
         } catch (AuthenticationException e) {
-            Map<String, String> errorResponse = new HashMap<>();
-            errorResponse.put("error", "Authentication failed");
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+                Map<String, Object> errorResponse = new HashMap<>();
+                Map<String, Object> dataResponse = new HashMap<>();
+                errorResponse.put("data", dataResponse);
+                errorResponse.put("status", 200);
+                errorResponse.put("sucess", false);
+                errorResponse.put("message", "Invalid email or password");
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
         }
     }
     
@@ -89,8 +123,13 @@ public class AuthController {
         user.setEmail(userDto.getEmail());
         user.setPassword(passwordEncoder.encode(userDto.getPassword()));
     
-        Role role = roleRepository.findByName("ROLE_ADMIN");
-        user.setRoles(role);
+        UserCustomizations userCustomizations = new UserCustomizations();
+        userCustomizationsRepositoy.save(userCustomizations);
+        
+        user.setUserCustomizations(userCustomizations);
+
+        Role role = roleRepository.findByName("ROLE_USER");
+        user.setRole(role);
     
         userRepository.save(user);
     
