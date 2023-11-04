@@ -57,15 +57,14 @@ public class AuthControllerTest {
 
         // Prepare test data
         UserDto userDto = new UserDto();
-        userDto.setFirstName("Test User");
-        userDto.setUsername("newuser");
+        userDto.setFirst_name("Test User");
         userDto.setEmail("newuser@example.com");
         userDto.setPassword("password123");
 
         Role mockRole = new Role();
         mockRole.setName("ROLE_ADMIN");
 
-        when(userRepository.existsByUsername("newuser")).thenReturn(false);
+        when(userRepository.existsByEmail("newuser")).thenReturn(false);
         when(userRepository.existsByEmail("newuser@example.com")).thenReturn(false);
 
         // Perform the POST request and expect a successful status code (200)
@@ -80,12 +79,11 @@ public class AuthControllerTest {
     public void testRegisterUser_DuplicateUsernameAndEmail() throws Exception {
         // Prepare test data
         UserDto userDto = new UserDto();
-        userDto.setFirstName("Test User");
-        userDto.setUsername("newuser");
+        userDto.setFirst_name("Test User");
         userDto.setEmail("newuser@example.com");
         userDto.setPassword("password123");
 
-        when(userRepository.existsByUsername("newuser")).thenReturn(true); // User with the same username exists
+        when(userRepository.existsByEmail("newuser")).thenReturn(true); // User with the same username exists
         when(userRepository.existsByEmail("newuser@example.com")).thenReturn(true); // User with the same email exists
 
         // Perform the POST request and expect a forbidden status code (403)
@@ -100,17 +98,16 @@ public class AuthControllerTest {
     public void testLogin_Success() throws Exception {
         // Prepare test data
         UserDto userDto = new UserDto();
-        userDto.setUsername("newuser");
+        userDto.setEmail("nonexistinguser@example.com");
         userDto.setPassword("password123");
 
         User mockUser = new User();
-        mockUser.setUsername("newuser");
         mockUser.setEmail("test@example.com");
 
         when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
             .thenReturn(new UsernamePasswordAuthenticationToken(mockUser, null, Collections.emptyList()));
         when(tokenService.tokenGenerate(any(User.class))).thenReturn("mockToken");
-        when(userRepository.existsByUsername("testuser")).thenReturn(true);
+        when(userRepository.existsByEmail("nonexistinguser@example.com")).thenReturn(true);
 
         // Perform the POST request and expect a successful status code (200)
         mockMvc.perform(MockMvcRequestBuilders.post("/api/login")
@@ -125,12 +122,12 @@ public class AuthControllerTest {
     public void testLogin_IncorrectPassword() throws Exception {
         // Prepare test data
         UserDto userDto = new UserDto();
-        userDto.setUsername("testuser");
+        userDto.setEmail("testuser");
         userDto.setPassword("wrongpassword");
 
         when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
                 .thenThrow(BadCredentialsException.class); // Mock authentication failure
-        when(userRepository.existsByUsername("testuser")).thenReturn(true);
+        when(userRepository.existsByEmail("test@example.com")).thenReturn(true);
 
         // Perform the POST request and expect an unauthorized status code (401)
         mockMvc.perform(MockMvcRequestBuilders.post("/api/login")
@@ -144,10 +141,10 @@ public class AuthControllerTest {
     public void testLogin_UserNotFound() throws Exception {
         // Prepare test data
         UserDto userDto = new UserDto();
-        userDto.setUsername("nonexistinguser");
+        userDto.setEmail("nonexistinguser@example.com");
         userDto.setPassword("password123");
 
-        when(userRepository.existsByUsername("nonexistinguser")).thenReturn(false);
+        when(userRepository.existsByEmail("nonexistinguser@example.com")).thenReturn(false);
 
         // Perform the POST request and expect a not found status code (404)
         mockMvc.perform(MockMvcRequestBuilders.post("/api/login")

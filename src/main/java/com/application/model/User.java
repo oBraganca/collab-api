@@ -52,6 +52,7 @@ public class User extends BaseModel implements UserDetails{
     public UUID getId() {
         return id;
     }
+
     public void setId(UUID id) {
         this.id = id;
     }
@@ -88,11 +89,11 @@ public class User extends BaseModel implements UserDetails{
         this.password = password;
     }
     
-    public Role getRoles() {
+    public Role getRole() {
         return role;
     }
     
-    public void setRoles(Role role) {
+    public void setRole(Role role) {
         this.role = role;
     }
 

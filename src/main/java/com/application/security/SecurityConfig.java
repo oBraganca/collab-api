@@ -22,11 +22,11 @@ public class SecurityConfig {
     private FilterToken filter;
 
     @Bean
-    public AuthenticationManager authenticationManager
-            (AuthenticationConfiguration authenticationConfiguration) throws Exception {
-        return authenticationConfiguration.getAuthenticationManager();
+    public AuthenticationManager authenticationManager(
+            AuthenticationConfiguration configuration
+    ) throws Exception {
+        return configuration.getAuthenticationManager();
     }
-
     @Bean
     public PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
@@ -38,9 +38,9 @@ public class SecurityConfig {
         return http.csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and().authorizeHttpRequests()
-                .requestMatchers(HttpMethod.POST, "/api/login")
+                .requestMatchers(HttpMethod.POST, "/api/auth/signin")
                 .permitAll()
-                .requestMatchers(HttpMethod.POST, "/api/register")
+                .requestMatchers(HttpMethod.POST, "/api/auth/signup")
                 .permitAll()
                 .anyRequest()
                 .authenticated()

@@ -76,12 +76,11 @@ public class UserControllerTest {
         try {
             // Create a user DTO for login
             UserDto userDto = new UserDto();
-            userDto.setUsername("newuser");
+            userDto.setEmail("nonexistinguser@example.com");
             userDto.setPassword("password123");
     
             // Create a mock user
             User mockUser = new User();
-            mockUser.setUsername("newuser");
             mockUser.setEmail("test@example.com");
     
             // Mock the authentication process
@@ -93,7 +92,7 @@ public class UserControllerTest {
             when(tokenService.tokenGenerate(any(User.class))).thenReturn("mockToken");
     
             // Mock the existence check for the username
-            when(userRepository.existsByUsername("newuser")).thenReturn(true);
+            when(userRepository.existsByEmail("nonexistinguser@example.com")).thenReturn(true);
     
             System.out.println(asJsonString(userDto));
             // Perform the POST request for login
@@ -118,18 +117,18 @@ public class UserControllerTest {
     @DisplayName("Update a user successfully")
     public void testUserUpdate() throws Exception {
 
-        var user = userRepository.findByUsername("newuser");
+        var user = userRepository.findByEmail("nonexistinguser@example.com");
 
         if(user != null){
             // Prepare test data
             UserDto userDto = new UserDto();
-            userDto.setFirstName("Test User Updated");
+            userDto.setFirst_name("Test User Updated");
             userDto.setEmail("newuser@example.com");
     
             Role mockRole = new Role();
             mockRole.setName("ROLE_ADMIN");
     
-            when(userRepository.existsByUsername("newuser")).thenReturn(true);
+            when(userRepository.existsByEmail("nonexistinguser@example.com")).thenReturn(true);
     
             // Perform the POST request and expect a successful status code (200)
             mockMvc.perform(MockMvcRequestBuilders.put("/user/" + user.getId())
@@ -144,7 +143,7 @@ public class UserControllerTest {
     @DisplayName("Delete a user successfully")
     public void testUserDelete() throws Exception {
 
-        var user = userRepository.findByUsername("newuser");
+        var user = userRepository.findByEmail("nonexistinguser@example.com");
 
         if(user != null){
     

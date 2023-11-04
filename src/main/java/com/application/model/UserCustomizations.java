@@ -28,10 +28,10 @@ public class UserCustomizations extends BaseModel {
     @Column(nullable = true, name = "theme")
     private Boolean theme;
 
-    @Column(nullable = false, name = "location")
+    @Column(nullable = true, name = "location")
     private String location;
 
-    @Column(nullable = false, name = "language")
+    @Column(nullable = true, name = "language")
     private String language;
 
     
