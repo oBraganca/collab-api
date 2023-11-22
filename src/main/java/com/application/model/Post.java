@@ -12,10 +12,12 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 
 @Entity
 @EntityListeners(ModelListerner.class)
 @Table(name="post")
+@EnableAutoConfiguration
 public class Post extends BaseModel{
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

@@ -3,81 +3,64 @@ package com.application.controller;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+
+import com.application.dto.Response;
+import com.application.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.application.dto.UserDto;
-import com.application.model.Role;
 import com.application.model.User;
-import com.application.repository.RoleRepository;
-import com.application.repository.UserRepository;
-import com.application.service.TokenService;
 
 
 @RestController
 @RequestMapping("/api/user")
 public class UserController {
 
+
     @Autowired
-    private UserRepository userRepository;
+    private UserService userService;
+
+
  
 	@DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable UUID id) {
+
         try {
-			var userExists = userRepository.existsById(id);
-			Map<String, String> response = new HashMap<>();
-			if(userExists){
-				response.put("message", "User deletion successfully");
-	
-				userRepository.deleteById(id);
-				return ResponseEntity.status(HttpStatus.OK).body(response);
-			}
-			response.put("message", "User dont exist");
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
-        } catch (Exception e) {
-            Map<String, String> errorResponse = new HashMap<>();
-            errorResponse.put("error", "User deletion failed");
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+            Response response = userService.delete(id);
+
+            return ResponseEntity.status(HttpStatus.OK).
+                    body(response);
+        } catch (ResourceNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).
+                    body(Response.error(
+                            e.getMessage(),
+                            HttpStatus.NOT_FOUND.value()
+                    ));
         }
     }
 
 	@PutMapping("/{id}")
     public ResponseEntity<?> update(@PathVariable UUID id, @RequestBody UserDto userDto) {
-		try {
-            User existingUser = userRepository.findById(id).orElse(null);
-            if (existingUser == null) {
-                Map<String, String> errorResponse = new HashMap<>();
-                errorResponse.put("error", "User not found");
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
-            }
+        try {
+            Response response = userService.update(id, userDto);
 
-            // Update user details based on userDto
-            existingUser.setFirstName(userDto.getFirst_name());
-            existingUser.setEmail(userDto.getEmail());
-
-            // Save the updated user
-            userRepository.save(existingUser);
-
-			Map<String, String> response = new HashMap<>();
-            response.put("error", "User update successfully");
-            return ResponseEntity.status(HttpStatus.OK).body(response);
-        } catch (Exception e) {
-            Map<String, String> errorResponse = new HashMap<>();
-            errorResponse.put("error", "User update failed");
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+            return ResponseEntity.status(HttpStatus.OK).
+                    body(response);
+        } catch (ResourceNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).
+                    body(Response.error(
+                            e.getMessage(),
+                            HttpStatus.NOT_FOUND.value()
+                    ));
         }
     }
 }

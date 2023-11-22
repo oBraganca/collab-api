@@ -105,8 +105,6 @@ public class AuthenticationService implements UserDetailsService {
     
         userRepository.save(user);
     
-        response.put("message", ""); // Add the "message" field
-    
         return new Response(Collections.emptyMap(), "User is registered successfully!", HttpStatus.CREATED.value(), true);
 
     }

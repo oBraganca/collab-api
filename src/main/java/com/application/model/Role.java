@@ -12,10 +12,12 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 import com.application.listener.ModelListerner;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 
 @Entity
 @EntityListeners(ModelListerner.class)
 @Table(name="role")
+@EnableAutoConfiguration
 public class Role extends BaseModel{
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
