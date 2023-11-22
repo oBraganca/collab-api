@@ -31,8 +31,13 @@ public class AuthController {
             Response response = authenticationService.authenticateUser(userDto);
             return ResponseEntity.status(HttpStatus.OK).body(response);
         } catch (AuthenticationException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Response.error("Invalid Email or Password", HttpStatus.NOT_FOUND.value()));
-        }    
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                    Response.error(
+                            "Invalid Email or Password",
+                            HttpStatus.NOT_FOUND.value()
+                    )
+            );
+        }
     }
     
     @PostMapping("/signup")

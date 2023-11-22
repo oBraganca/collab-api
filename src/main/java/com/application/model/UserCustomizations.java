@@ -11,10 +11,12 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 
 @Entity
 @EntityListeners(ModelListerner.class)
 @Table(name="user_customizations")
+@EnableAutoConfiguration
 public class UserCustomizations extends BaseModel {
 
     @Id

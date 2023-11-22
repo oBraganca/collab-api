@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Set;
 
 @Entity
+
 @EntityListeners(ModelListerner.class)
 @Table(name="users")
 public class User extends BaseModel implements UserDetails{
