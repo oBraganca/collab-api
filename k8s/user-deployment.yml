@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: user-service
+  labels:
+    app: user-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: user-service
+  template:
+    metadata:
+      labels:
+        app: user-service
+    spec:
+      containers:
+        - name: user-service
+          image: obraganca/user-service:1.0
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 9002
+          resources:
+            requests:
+              cpu: "0.2"
+              memory: 300Mi
+            limits:
+              cpu: "1.0"
+              memory: 300Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: user-service
+  labels:
+    app: user-service
+spec:
+  ports:
+    - port: 9002
+      protocol: TCP
+      targetPort: 9002
+  selector:
+    app: user-service
+  type: NodePort
