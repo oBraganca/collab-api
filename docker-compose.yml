@@ -14,17 +14,17 @@ services:
       - "8761:8761"
 
   api-gateway:
-    image: obraganca/eureka-server:1.0
+    image: obraganca/api-gateway:1.0
     container_name: api-gateway
     ports:
       - "8080:8080"
     depends_on:
       - eureka-server
 
-  microservice1:
-    image: obraganca/eureka-server:1.0
-    container_name: api-gateway
+  user-service:
+    image: obraganca/user-service:1.0
+    container_name: user-service
     ports:
-      - "8081:8081"
+      - "9002:9002"
     depends_on:
       - eureka-server
