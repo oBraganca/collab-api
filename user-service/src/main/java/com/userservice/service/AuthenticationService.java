@@ -4,6 +4,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.userservice.model.Profile;
+import com.userservice.repository.ProfileRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
@@ -22,9 +24,7 @@ import com.userservice.dto.Response;
 import com.userservice.dto.UserDto;
 import com.userservice.model.Role;
 import com.userservice.model.User;
-import com.userservice.model.UserCustomizations;
 import com.userservice.repository.RoleRepository;
-import com.userservice.repository.UserCustomizationsRepositoy;
 import com.userservice.repository.UserRepository;
 
 @Service
@@ -32,17 +32,17 @@ public class AuthenticationService implements UserDetailsService {
 
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
-    private final UserCustomizationsRepositoy userCustomizationsRepositoy;
+    private final ProfileRepository profileRepository;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final TokenService tokenService;
 
     @Autowired
-    public AuthenticationService(UserRepository userRepository, RoleRepository roleRepository, UserCustomizationsRepositoy userCustomizationsRepository,
+    public AuthenticationService(UserRepository userRepository, RoleRepository roleRepository, ProfileRepository profileRepository,
                                 PasswordEncoder passwordEncoder, @Lazy AuthenticationManager authenticationManager, TokenService tokenService) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
-        this.userCustomizationsRepositoy = userCustomizationsRepository;
+        this.profileRepository = profileRepository;
         this.passwordEncoder = passwordEncoder;
         this.authenticationManager = authenticationManager;
         this.tokenService = tokenService;
@@ -57,20 +57,20 @@ public class AuthenticationService implements UserDetailsService {
         Authentication authenticate = authenticationManager.authenticate(usernamePasswordAuthenticationToken);
 
         User user = (User) authenticate.getPrincipal();
+        Profile profile = user.getProfile();
 
         String token = tokenService.tokenGenerate(user);
 
         Map<String, Object> dataResponse = new HashMap<>();
-        dataResponse.put("first_name", user.getFirstName());
-        dataResponse.put("last_name", user.getLastName());
+        dataResponse.put("first_name", profile.getFirstName());
+        dataResponse.put("last_name", profile.getLastName());
         dataResponse.put("email", user.getEmail());
 
         Role role = user.getRole();
         dataResponse.put("role", role.getName());
 
-        UserCustomizations userCustomizations = user.getUserCustomizations();
-        dataResponse.put("picture", userCustomizations.getPicture());
-        dataResponse.put("theme", userCustomizations.getTheme());
+        dataResponse.put("picture", profile.getPicture());
+        dataResponse.put("theme", profile.getTheme());
 
         dataResponse.put("token", token);
 
@@ -90,15 +90,17 @@ public class AuthenticationService implements UserDetailsService {
     
         // creating user object
         User user = new User();
-        user.setFirstName(userDto.getFirst_name());
-        user.setLastName(userDto.getLast_name());
         user.setEmail(userDto.getEmail());
         user.setPassword(passwordEncoder.encode(userDto.getPassword()));
     
-        UserCustomizations userCustomizations = new UserCustomizations();
-        userCustomizationsRepositoy.save(userCustomizations);
+        Profile profile = new Profile();
+
+        profile.setFirstName(userDto.getFirst_name());
+        profile.setLastName(userDto.getLast_name());
+
+        profileRepository.save(profile);
         
-        user.setUserCustomizations(userCustomizations);
+        user.setProfile(profile);
 
         Role role = roleRepository.findByName("ROLE_USER");
         user.setRole(role);

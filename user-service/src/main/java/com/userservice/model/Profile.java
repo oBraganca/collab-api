@@ -15,15 +15,21 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 
 @Entity
 @EntityListeners(ModelListerner.class)
-@Table(name="user_customizations")
+@Table(name="profile")
 @EnableAutoConfiguration
-public class UserCustomizations extends BaseModel {
+public class Profile extends BaseModel {
 
     @Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
     private UUID id;
 
-    
+
+    @Column(nullable = false, unique = false, name = "first_name")
+    private String first_name;
+
+    @Column(nullable = false, unique = false, name = "last_name")
+    private String last_name;
+
     @Column(nullable = true, name = "picture")
     private String picture;
 
@@ -36,8 +42,23 @@ public class UserCustomizations extends BaseModel {
     @Column(nullable = true, name = "language")
     private String language;
 
-    
-    
+
+    public String getLastName() {
+        return last_name;
+    }
+
+    public void setLastName(String last_name) {
+        this.last_name = last_name;
+    }
+
+    public String getFirstName() {
+        return first_name;
+    }
+
+    public void setFirstName(String first_name) {
+        this.first_name = first_name;
+    }
+
     public String getPicture() {
         return picture;
     }

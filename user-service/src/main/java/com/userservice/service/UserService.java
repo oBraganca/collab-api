@@ -2,9 +2,9 @@ package com.userservice.service;
 
 import com.userservice.dto.Response;
 import com.userservice.dto.UserDto;
+import com.userservice.model.Profile;
 import com.userservice.model.Role;
 import com.userservice.model.User;
-import com.userservice.model.UserCustomizations;
 import com.userservice.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
@@ -39,22 +39,22 @@ public class UserService {
                 .orElseThrow(() -> new ResourceNotFoundException("Not found User with id = " + id));
 
         // Update user details based on userDto
-        existingUser.setFirstName(userDto.getFirst_name());
+        existingUser.getProfile().setFirstName(userDto.getFirst_name());
 
         // Save the updated user
         userRepository.save(existingUser);
 
         Map<String, Object> dataResponse = new HashMap<>();
-        dataResponse.put("first_name", existingUser.getFirstName());
-        dataResponse.put("last_name", existingUser.getLastName());
+        dataResponse.put("first_name", existingUser.getProfile().getFirstName());
+        dataResponse.put("last_name", existingUser.getProfile().getLastName());
         dataResponse.put("email", existingUser.getEmail());
 
         Role role = existingUser.getRole();
         dataResponse.put("role", role.getName());
 
-        UserCustomizations userCustomizations = existingUser.getUserCustomizations();
-        dataResponse.put("picture", userCustomizations.getPicture());
-        dataResponse.put("theme", userCustomizations.getTheme());
+        Profile profile = existingUser.getProfile();
+        dataResponse.put("picture", profile.getPicture());
+        dataResponse.put("theme", profile.getTheme());
 
         return new Response(dataResponse, "User updated successfully", HttpStatus.OK.value(), true);
     }

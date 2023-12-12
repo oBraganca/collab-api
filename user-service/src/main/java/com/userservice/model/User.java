@@ -32,12 +32,6 @@ public class User extends BaseModel implements UserDetails{
 	@GeneratedValue(strategy=GenerationType.AUTO)
     private UUID id;
 
-    @Column(nullable = false, unique = false, name = "first_name")
-    private String first_name;
-
-    @Column(nullable = false, unique = false, name = "last_name")
-    private String last_name;
-
     @Column(nullable = false, unique = true, name = "email")
     private String email;
 
@@ -48,7 +42,7 @@ public class User extends BaseModel implements UserDetails{
     private Role role;
 
     @OneToOne
-    private UserCustomizations userCustomizations;
+    private Profile profile;
 
     public UUID getId() {
         return id;
@@ -58,22 +52,6 @@ public class User extends BaseModel implements UserDetails{
         this.id = id;
     }
 
-    public String getLastName() {
-        return last_name;
-    }
-    
-    public void setLastName(String last_name) {
-        this.last_name = last_name;
-    }
-    
-    public String getFirstName() {
-        return first_name;
-    }
-    
-    public void setFirstName(String first_name) {
-        this.first_name = first_name;
-    }
-    
     public String getEmail() {
         return email;
     }
@@ -103,12 +81,12 @@ public class User extends BaseModel implements UserDetails{
         return email;
     }
 
-    public UserCustomizations getUserCustomizations() {
-        return userCustomizations;
+    public Profile getProfile() {
+        return profile;
     }
     
-    public void setUserCustomizations(UserCustomizations userCustomizations) {
-        this.userCustomizations = userCustomizations;
+    public void setProfile(Profile profile) {
+        this.profile = profile;
     }
 
     public User orElseThrow(Object object) {
