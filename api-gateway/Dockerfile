@@ -1,4 +1,13 @@
-FROM adoptopenjdk/openjdk11:alpine-jre
-ARG JAR_FILE=target/*.jar
-COPY ${JAR_FILE} gateway-0.0.1-SNAPSHOT.jar
-ENTRYPOINT ["java","-jar","/gateway-0.0.1-SNAPSHOT.jar"]
+FROM openjdk:17
+
+ENV APP_NAME api-gateway
+
+MAINTAINER ${APP_NAME}
+
+COPY ./target/${APP_NAME}.jar  /app/${APP_NAME}.jar
+
+WORKDIR /app
+
+EXPOSE 8080
+
+ENTRYPOINT java -jar ${APP_NAME}.jar

@@ -1,4 +1,13 @@
-FROM adoptopenjdk/openjdk11:alpine-jre
-ARG JAR_FILE=target/*.jar
-COPY ${JAR_FILE} app.jar
-ENTRYPOINT ["java","-jar","/app.jar","registration"]
+FROM openjdk:17
+
+ENV APP_NAME eureka-server
+
+MAINTAINER ${APP_NAME}
+
+COPY ./target/${APP_NAME}.jar  /app/${APP_NAME}.jar
+
+WORKDIR /app
+
+EXPOSE 8761
+
+ENTRYPOINT java -jar ${APP_NAME}.jar
