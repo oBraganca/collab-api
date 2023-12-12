@@ -22,7 +22,7 @@ public class ApiGatewayApplication {
 	}
 
 	@Bean
-	public RouteLocator customRouteLocator(RouteLocatorBuilder builder) {
+	public RouteLocator userServiceRouteLocator(RouteLocatorBuilder builder) {
 		return builder.routes()
 				.route("user-service", r -> r
 						.path("/api/**")
