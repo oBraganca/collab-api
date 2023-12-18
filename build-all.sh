@@ -27,5 +27,5 @@ echo ""
 echo ==================== BUILDING USER SERVICE ====================
 cd ./user-service
 ./mvnw clean install
-docker build -t obraganca/user-gateway:1.0 . 
+docker build -t obraganca/user-service:1.0 . 
 cd ..

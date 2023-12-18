@@ -17,4 +17,4 @@ docker push obraganca/api-gateway:1.0
 echo ""
 
 echo ==================== PUSHING USER SERVICE ====================
-docker push obraganca/user-gateway:1.0
+docker push obraganca/user-service:1.0

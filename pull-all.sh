@@ -17,4 +17,4 @@ docker pull obraganca/api-gateway:1.0
 echo ""
 
 echo ==================== PULLING USER SERVICE ====================
-docker pull obraganca/user-gateway:1.0
+docker pull obraganca/user-service:1.0
