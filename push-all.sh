@@ -18,3 +18,8 @@ echo ""
 
 echo ==================== PUSHING USER SERVICE ====================
 docker push obraganca/user-service:1.0
+
+echo ""
+
+echo ==================== PUSHING EMAIL SERVICE ====================
+docker push obraganca/email-service:1.0

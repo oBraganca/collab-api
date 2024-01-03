@@ -18,3 +18,8 @@ echo ""
 
 echo ==================== PULLING USER SERVICE ====================
 docker pull obraganca/user-service:1.0
+
+echo ""
+
+echo ==================== PULLING EMAIL SERVICE ====================
+docker pull obraganca/email-service:1.0

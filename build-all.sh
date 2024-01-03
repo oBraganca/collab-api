@@ -29,3 +29,10 @@ cd ./user-service
 ./mvnw clean install
 docker build -t obraganca/user-service:1.0 . 
 cd ..
+
+echo ==================== BUILDING EMAIL SERVICE ====================
+cd ./email-service
+./mvnw clean install
+docker build -t obraganca/email-service:1.0 . 
+cd ..
+
