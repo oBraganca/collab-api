@@ -5,7 +5,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.userservice.model.Profile;
+import com.userservice.producer.EmailProducer;
 import com.userservice.repository.ProfileRepository;
+import jakarta.validation.constraints.Email;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
@@ -36,16 +38,19 @@ public class AuthenticationService implements UserDetailsService {
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final TokenService tokenService;
+    private final EmailProducer emailProducer;
 
     @Autowired
     public AuthenticationService(UserRepository userRepository, RoleRepository roleRepository, ProfileRepository profileRepository,
-                                PasswordEncoder passwordEncoder, @Lazy AuthenticationManager authenticationManager, TokenService tokenService) {
+                                PasswordEncoder passwordEncoder, @Lazy AuthenticationManager authenticationManager, TokenService tokenService, EmailProducer emailProducer) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.profileRepository = profileRepository;
         this.passwordEncoder = passwordEncoder;
         this.authenticationManager = authenticationManager;
         this.tokenService = tokenService;
+        this.emailProducer = emailProducer;
+
     }
 
     
@@ -106,6 +111,8 @@ public class AuthenticationService implements UserDetailsService {
         user.setRole(role);
     
         userRepository.save(user);
+
+        emailProducer.sendMessageEmailConfirmation(user.getEmail());
     
         return new Response(Collections.emptyMap(), "User is registered successfully!", HttpStatus.CREATED.value(), true);
 

@@ -12,10 +12,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.kafka.annotation.EnableKafka;
 
 
 @EnableDiscoveryClient
 @EnableFeignClients
+@EnableKafka
 @SpringBootApplication(exclude = { UserDetailsServiceAutoConfiguration.class })
 public class UserServiceApplication {
 
