@@ -29,6 +29,14 @@ services:
     depends_on:
       - eureka-server
 
+  email-service:
+    image: obraganca/email-service:1.0
+    container_name: email-service
+    ports:
+      - "9003:9003"
+    depends_on:
+      - eureka-server
+
 
 
   zookeeper:

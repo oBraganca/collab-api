@@ -7,5 +7,5 @@ import java.util.UUID;
 
 public interface EmailRepository extends JpaRepository<EmailModel, UUID> {
 
-    EmailModel getByEmail(String email);
+    EmailModel getByEmailFrom(String email);
 }

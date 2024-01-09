@@ -2,37 +2,52 @@
 
 echo ==================== BUILDING CONFIG SERVER ====================
 cd ./config-server
-./mvnw clean install
-docker build -t obraganca/config-server:1.0 .
+if ./mvnw clean install; then
+  docker build -t obraganca/config-server:1.0 .
+else
+  echo "O comando mvnw falhou. O docker build não será executado."
+fi
 cd ..
 
 echo ""
 
 echo ==================== BUILDING EUREKA SERVER ==================== 
 cd ./eureka-server
-./mvnw clean install
-docker build -t obraganca/eureka-server:1.0 . 
+if ./mvnw clean install; then
+  docker build -t obraganca/eureka-server:1.0 . 
+else
+  echo "O comando mvnw falhou. O docker build não será executado."
+fi
 cd ..
 
 echo ""
 
 echo ==================== BUILDING API GATEWAY ====================
 cd ./api-gateway
-./mvnw clean install
-docker build -t obraganca/api-gateway:1.0 .
+if ./mvnw clean install; then
+  docker build -t obraganca/api-gateway:1.0 .
+else
+  echo "O comando mvnw falhou. O docker build não será executado."
+fi
 cd ..
 
 echo ""
 
 echo ==================== BUILDING USER SERVICE ====================
 cd ./user-service
-./mvnw clean install
-docker build -t obraganca/user-service:1.0 . 
+if ./mvnw clean install; then
+  docker build -t obraganca/user-service:1.0 . 
+else
+  echo "O comando mvnw falhou. O docker build não será executado."
+fi
 cd ..
 
 echo ==================== BUILDING EMAIL SERVICE ====================
 cd ./email-service
-./mvnw clean install
-docker build -t obraganca/email-service:1.0 . 
+if ./mvnw clean install; then
+  docker build -t obraganca/email-service:1.0 . 
+else
+  echo "O comando mvnw falhou. O docker build não será executado."
+fi
 cd ..
 

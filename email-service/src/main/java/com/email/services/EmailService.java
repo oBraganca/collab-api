@@ -27,7 +27,7 @@ public class EmailService {
 
     @Transactional
     public EmailModel sendEmail(String email) {
-        EmailModel emailModel = emailRepository.getByEmail(email);
+        EmailModel emailModel = emailRepository.getByEmailFrom(email);
 
         emailModel.setSendDateEmail(LocalDateTime.now());
         try{
