@@ -4,6 +4,19 @@ spring:
     activate:
       on-profile: docker
 
+  datasource:
+    url: jdbc:postgresql://postgres-email-service:5432/email_service
+    username: postgres
+    password: admin@123
+  jpa:
+    hibernate:
+      ddl-auto: create
+  properties:
+    hibernate:
+      jdbc:
+        lob:
+          non_contextual_creation: true
+
 eureka:
   client:
     service-url:
@@ -12,7 +25,7 @@ eureka:
 ---
 spring:
   application:
-    name: user-service
+    name: email-service
   config:
     import: "optional:configserver:http://localhost:8088"
 
@@ -20,7 +33,7 @@ spring:
     web-application-type: reactive
     allow-bean-definition-overriding: true
   datasource:
-    url: jdbc:postgresql://postgres-user-service:5432/user_service
+    url: jdbc:postgresql://localhost:5432/email_service
     username: postgres
     password: admin@123
   jpa:
@@ -36,7 +49,7 @@ spring:
       order-map-entries-by-keys: false
 
 server:
-  port: 9002
+  port: 9003
 security:
   basic:
     enabled: false
@@ -47,7 +60,3 @@ eureka:
   client:
     service-url:
       defaultZone: http://eureka-server:8761/eureka/
-#eureka:
-#  client:
-#    service-url:
-#      defaultZone: http://localhost:8761/eureka/

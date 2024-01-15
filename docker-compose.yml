@@ -5,8 +5,7 @@ services:
     container_name: config-server
     ports:
       - "8088:8088"
-    
-  
+
   eureka-server:
     image: obraganca/eureka-server:1.0
     container_name: eureka-server
@@ -28,6 +27,16 @@ services:
       - "9002:9002"
     depends_on:
       - eureka-server
+    # PostgreSQL for user-service
+    postgres:
+      image: postgres:latest
+      container_name: postgres-user-service
+      ports:
+        - "5432:5432"
+      environment:
+        POSTGRES_DB: user_database
+        POSTGRES_USER: user_db_user
+        POSTGRES_PASSWORD: user_db_password
 
   email-service:
     image: obraganca/email-service:1.0
@@ -36,8 +45,16 @@ services:
       - "9003:9003"
     depends_on:
       - eureka-server
-
-
+    # PostgreSQL for email-service
+    postgres:
+      image: postgres:latest
+      container_name: postgres-email-service
+      ports:
+        - "5433:5432"
+      environment:
+        POSTGRES_DB: email_database
+        POSTGRES_USER: email_db_user
+        POSTGRES_PASSWORD: email_db_password
 
   zookeeper:
     hostname: zookeeper
@@ -47,6 +64,7 @@ services:
       ZOOKEEPER_TICK_TIME: 2000
     ports:
       - 22181:2181
+
   kafka:
     hostname: kafka
     image: confluentinc/cp-kafka:latest
@@ -58,6 +76,4 @@ services:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_HOST://kafka:29092
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
-      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
-      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINT
