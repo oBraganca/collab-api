@@ -5,7 +5,7 @@ spring:
       on-profile: docker
 
   datasource:
-    url: jdbc:postgresql://postgres-email-service:5432/email_service
+    url: jdbc:postgresql://postgres-email-service:5433/email_service
     username: postgres
     password: admin@123
   jpa:

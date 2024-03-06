@@ -3,6 +3,18 @@ spring:
     import: "optional:configserver:http://config-service:8088"
     activate:
       on-profile: docker
+  datasource:
+    url: jdbc:postgresql://postgres-user-service:5432/user_service
+    username: postgres
+    password: admin@123
+  jpa:
+    hibernate:
+      ddl-auto: create
+  properties:
+    hibernate:
+      jdbc:
+        lob:
+          non_contextual_creation: true
 
 eureka:
   client:

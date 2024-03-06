@@ -27,16 +27,16 @@ services:
       - "9002:9002"
     depends_on:
       - eureka-server
-    # PostgreSQL for user-service
-    postgres:
-      image: postgres:latest
-      container_name: postgres-user-service
-      ports:
-        - "5432:5432"
-      environment:
-        POSTGRES_DB: user_database
-        POSTGRES_USER: user_db_user
-        POSTGRES_PASSWORD: user_db_password
+
+  postgres-user-service:
+    image: postgres:latest
+    container_name: postgres-user-service
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: user_service
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin@123
 
   email-service:
     image: obraganca/email-service:1.0
@@ -45,16 +45,16 @@ services:
       - "9003:9003"
     depends_on:
       - eureka-server
-    # PostgreSQL for email-service
-    postgres:
-      image: postgres:latest
-      container_name: postgres-email-service
-      ports:
-        - "5433:5432"
-      environment:
-        POSTGRES_DB: email_database
-        POSTGRES_USER: email_db_user
-        POSTGRES_PASSWORD: email_db_password
+      
+  postgres-email-service:
+    image: postgres:latest
+    container_name: postgres-email-service
+    ports:
+      - "5433:5433"
+    environment:
+      POSTGRES_DB: email-service
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin@123
 
   zookeeper:
     hostname: zookeeper
