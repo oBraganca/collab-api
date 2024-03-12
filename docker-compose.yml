@@ -1,79 +1,66 @@
 version: '3'
 services:
-  config-server:
-    image: obraganca/config-server:1.0
-    container_name: config-server
-    ports:
-      - "8088:8088"
-
-  eureka-server:
-    image: obraganca/eureka-server:1.0
-    container_name: eureka-server
-    ports:
-      - "8761:8761"
-
-  api-gateway:
-    image: obraganca/api-gateway:1.0
-    container_name: api-gateway
-    ports:
-      - "8080:8080"
-    depends_on:
-      - eureka-server
-
-  user-service:
-    image: obraganca/user-service:1.0
-    container_name: user-service
-    ports:
-      - "9002:9002"
-    depends_on:
-      - eureka-server
-
   postgres-user-service:
     image: postgres:latest
     container_name: postgres-user-service
+    restart: always
     ports:
       - "5432:5432"
     environment:
       POSTGRES_DB: user_service
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: admin@123
+    volumes:
+      - my-db-user:/var/lib/postgres
+    networks:
+      - collab-network
 
-  email-service:
-    image: obraganca/email-service:1.0
-    container_name: email-service
-    ports:
-      - "9003:9003"
-    depends_on:
-      - eureka-server
-      
   postgres-email-service:
     image: postgres:latest
     container_name: postgres-email-service
+    restart: always
     ports:
       - "5433:5433"
     environment:
-      POSTGRES_DB: email-service
+      POSTGRES_DB: email_service
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: admin@123
+    volumes:
+      - my-db-email:/var/lib/postgres
+    networks:
+      - collab-network
 
   zookeeper:
     hostname: zookeeper
     image: confluentinc/cp-zookeeper:latest
+    restart: always
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
     ports:
-      - 22181:2181
+      - 2181:2181
+    networks:
+      - collab-network
 
   kafka:
     hostname: kafka
     image: confluentinc/cp-kafka:latest
+    restart: always
     depends_on:
       - zookeeper
     ports:
-      - 9092:9092
+      - 9094:9094
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_HOST://kafka:29092
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINT
+    networks:
+      - collab-network
+
+volumes:
+  my-db-user:
+  my-db-email:
+
+networks:
+  collab-network:
