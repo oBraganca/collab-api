@@ -8,7 +8,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-@Data
+
 @Entity
 @Table(name = "email")
 public class EmailModel implements Serializable {

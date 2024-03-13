@@ -2,7 +2,7 @@ spring:
   datasource:
     username: postgres
     password: admin@123
-    url: jdbc:mysql://localhost:5433/email_service?useSSL=false
+    url: jdbc:postgresql://localhost:5433/email_service?useSSL=false
   jpa:
     defer-datasource-initialization: true
     properties.hibernate.format_sql: true
