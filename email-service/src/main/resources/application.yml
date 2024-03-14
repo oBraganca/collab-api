@@ -21,10 +21,7 @@ spring:
   datasource:
     username: ${USER_DB:postgres}
     password: ${PASSWORD_DB:admin@123}
-    url: jdbc:postgresql://localhost:5433/email_service?useSSL=false
-
-
-
+    url: ${HOST_DB:jdbc:postgresql://localhost:5433/email_service?useSSL=false}
 eureka:
   instance:
     non-secure-port: 80
